@@ -1,0 +1,337 @@
+<html> 
+    <head> 
+        <title>Fish Simulator</title>
+        <h2>Eat or Get Eaten!</h2>
+        <style></style>
+    </head>
+    <body onload="startGame()" bgColor=lightblue> 
+         <script language="javascript" type="text/javascript">
+             
+             //VARIABLES
+             
+             var fish; //player controlled piece  
+             var foods = []; //mutliple point objects
+             var smallFish; //higher valule point
+             var foodAmount = 5;
+             var enemies = [];//multiple enemies
+             var enemiesR = []; //enemies on the right
+             var score;
+             var points = 0 
+             var int = 200 //frequency of enemy spawning
+             var respawn; //respawn button 
+             var again; 
+             var gameArea = { 
+                 canvas: document.createElement("canvas"),
+                 start: function () {
+                     this.canvas.width = 800; //alters width and height of canvas
+                     this.canvas.height = 500; 
+                     this.context = this.canvas.getContext("2d");
+                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                     this.frameNo = 0;
+                     this.interval = setInterval(update, 20);
+                    
+                     window.addEventListener('keydown', function(e){ //allows the fish to move at a diagonal
+                         gameArea.keys = (gameArea.keys || []);
+                         gameArea.keys[e.keyCode] = true;
+                     })
+                     window.addEventListener('keyup', function(e){
+                         gameArea.keys[e.keyCode] = false;
+                     })
+                     
+                     window.addEventListener('mousedown', function(e){ //makes the respawn button clickable
+                        gameArea.x = e.pageX; 
+                         gameArea.y = e.pageY;
+                     })
+                     window.addEventListener('mouseup', function(e){
+                         gameArea.x = false;
+                         gameArea.y = false;  
+                     })
+                      
+                 },
+                 clear: function(){
+                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); },
+                 stop: function() {
+                     clearInterval(this.interval);
+                 }
+             }
+                  
+             
+             //FUNCTIONS
+             
+             function startGame(){
+                 fish = new component(90, 48, "mainfish.png", 350, 250, "image"); //the main piece
+                 smallFish = new component(40, 25, "smallfish.png", Math.floor(Math.random() * 700), (Math.floor(Math.random() * 400)), "image"); 
+                 background = new component(800, 500, "bluebg.png", 0, 0, "image") //background format 
+                 score = new component("15px", "Consolas", "black", 700, 40, "text") //score format
+                 respawn = new component(60, 20, "button.png", 700, 50, "image"); 
+                 for (var j = 0; j < foodAmount; j++){foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))} //creates multiple food pieces
+                 gameArea.start();
+             }
+             //end of startGame
+             
+             function everyInterval(n){
+                 if ((gameArea.frameNo / n) % 1 == 0) {return true;}
+                    return false;
+             }
+             //end of everyInterval
+    
+             function component(width, height, color, x, y, type){
+                 this.type = type;
+                 if (type == "image") { //allows images to be assigned to componants
+                     this.image = new Image();
+                     this.image.src = color;
+                 }
+                 this.width = width;
+                 this.height = height;
+                 this.speedX = 0;
+                 this.speedY = 0;
+                 this.x = x; 
+                 this.y = y; 
+                 this.update = function(){
+                 ctx = gameArea.context;
+                     if (this.type == "text") {
+                         ctx.font = this.width + " " + this.height;
+                         ctx.fillStyle = color;
+                         ctx.fillText(this.text, this.x, this.y); }
+                     else if (this.type == "image") {
+                         ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+                     }
+                     else {
+                     
+                 ctx.fillStyle = color;
+                 ctx.fillRect(this.x, this.y, this.width, this.height,); 
+                 } } 
+                 this.newPos = function(){
+                     this.x += this.speedX;
+                     this.y += this.speedY;
+                 }
+                 this.crashWith = function(otherobj){ //checks to see if objects touch
+                     var myLeft = this.x;
+                     var myRight = this.x + (this.width);
+                     var myTop = this.y;
+                     var myBottom = this.y + (this.height);
+                     var otherLeft = otherobj.x;
+                     var otherRight = otherobj.x + (otherobj.width);
+                     var otherTop = otherobj.y;
+                     var otherBottom = otherobj.y + (otherobj.height);
+                     var crash = true; 
+                     if ((myBottom < otherTop) || (myTop > otherBottom) || (myRight < otherLeft) || (myLeft > otherRight)) {
+                         crash = false;
+                     }
+                     return crash;
+                 }
+                 
+                 this.clicked = function(){//checks to see if an object has been clicked
+                     var myLeft = this.x;
+                     var myRight = this.x + (this.width);
+                     var myTop = this.y;
+                     var myBottom = this.y + (this.height);
+                     var clicked = true;
+                     if ((myBottom < gameArea.y) || (myTop > gameArea.y) || (myRight < gameArea.x) || (myLeft > gameArea.x)) {
+                     clicked = false;
+                     }
+                 return clicked;
+                 }
+             }
+             //end of component
+             
+             function update(){ 
+                 var x;
+                 var y; 
+                 for (i = 0; i < enemies.length; i+= 1) {
+                 if (fish.crashWith(enemies[i])) { //this if statement stops the game if the fish hits enemies
+                     gameArea.stop();
+                     alert("You got eaten! In your fishy lifetime you got " + points + " points from eating things!")
+                     var again = prompt("Play again? (y/n)", "yes")
+                     again = again.toLowerCase()
+                     if (again == "yes" || again == "ya" || again == "yeah" || again == "y"){window.location.reload()} //reloads game
+                     else if (again == "no" || again == "nah" || again == "nope" || again == "n"){alert("Ok! Thank you for playing! If you change your mind just refresh the page.")}
+                     else {alert(again + "? I don't understand, please refresh the page if you want to play again")} 
+                     return;
+                     }
+                 }
+                  for (i = 0; i < enemiesR.length; i+= 1) {
+                 if (fish.crashWith(enemiesR[i])) {
+                     gameArea.stop();
+                     alert("You got eaten! In your fishy lifetime you got " + points + " points from eating things!")
+                     var again = prompt("Play again? (y/n)", "yes")
+                     again = again.toLowerCase()
+                     if (again == "yes" || again == "ya" || again == "yeah" || again == "y" || again == "sure"){window.location.reload()}
+                     else if (again == "no" || again == "nah" || again == "nope" || again == "n"){alert("Ok! Thank you for playing! If you change your mind just refresh the page.")}
+                     else {alert(again + "? I don't understand, please refresh the page if you want to play again")} 
+                     return;
+                     }
+                 }
+                 
+                 function getPoints(){ //adds points if food objects are touched 
+                 for (var j = 0; j < foods.length; j++){
+                  if (fish.crashWith(foods[j])){points += 1; 
+                 foods[j].x = Math.floor(Math.random() * 700); 
+                 foods[j].y = Math.floor(Math.random() * 500);} }
+                     
+                 if (fish.crashWith(smallFish)){points += 5; 
+                 smallFish.x = Math.floor(Math.random() * 700);
+                 smallFish.y = Math.floor(Math.random() * 500);}
+                 return points;
+                 }
+                 //end of getPoints
+                 
+                 function newColour(){ //randomizes colour of sharks
+                     var choose = Math.floor(Math.random() * 4)
+                     var image = "";
+                     if (choose == 0){image = "flipenemyRED.png"}
+                     else if (choose == 1){image = "flipenemyGREEN.png"}
+                     else if (choose == 2){image = "flipenemyYELLOW.png"}
+                     else if (choose == 3 || choose == 4){image = "flipenemyPURPLE.png"}
+                     else {image = "temporary-fish.png"} //test, should not be possible
+                     
+                     return image; 
+                 }
+                 //end of newColour
+                 
+                 function newColourR(){
+                     var choose = Math.floor(Math.random() * 4)
+                     var image = "";
+                     if (choose == 0){image = "enemyRED.png"}
+                     else if (choose == 1){image = "enemyGREEN.png"}
+                     else if (choose == 2){image = "enemyYELLOW.png"}
+                     else if (choose == 3 || choose == 4){image = "enemyPURPLE.png"}
+                     else {image = "temporary-fish.png"} //test, should not be possible 
+                     return image; 
+                 }
+                 //end of newColourR
+                 
+                 if (gameArea.x && gameArea.y){ //refreshes the page if respawn is clicked
+                     if (respawn.clicked()){
+                         window.location.reload();
+                     }
+                 }
+                 
+                 gameArea.clear();
+                 background.newPos();
+                 background.update();
+                 gameArea.frameNo += 1;
+                 if (gameArea.frameNo == 1 || everyInterval(int)) {
+                     x = -120
+                     x2 = 800
+                     y = Math.floor(Math.random() * 450); //randomizes y position of shark
+                     y2 = Math.floor(Math.random() * 450);
+                     enemies.push(new component(120, 60, newColour(), x, y, "image")) //adds new enemies every few frames
+                     enemiesR.push(new component(120, 60, newColourR(), x2, y2, "image")) 
+                 }
+                 
+                 for (i = 0; i < enemies.length; i += 1) { 
+                     enemies[i].x += 1;
+                     enemies[i].update();
+                 }
+                 for (i = 0; i < enemiesR.length; i += 1) {
+                     enemiesR[i].x -= 1;
+                     enemiesR[i].update();
+                 }
+                 fish.speedX = 0;
+                 fish.speedY = 0;
+                 if (gameArea.keys && gameArea.keys[37]){flipmove("left");} //allows arrow keys to control fish
+                 if (gameArea.keys && gameArea.keys[39]){move("right");}
+                 if (gameArea.keys && gameArea.keys[38]){fish.speedY = -2;} 
+                 if (gameArea.keys && gameArea.keys[40]){fish.speedY = 2;;}
+                 if (fish.speedX == 0 && fish.speedY == 0) {clearmove();}
+                 
+                 score.text = "SCORE: " + getPoints(); 
+                 score.update();
+                 fish.newPos();
+                 fish.update();
+                 //food.update();
+                 respawn.update();
+                 //smallfish.x += 1;
+                 smallFish.update();
+                 for (var j = 0; j < foods.length; j++){foods[j].update()}
+                 
+             }
+             //end of update
+             
+             function move(dir){ //makes the fish open it's mouth when moving 
+                 fish.image.src = "movefish.png"; 
+                 fish.image.height = 40 
+                 fish.image.width = 90
+                 //if (dir == "up") {fish.speedY = -2;}  
+                 //if (dir == "down") {fish.speedY = 2; }
+                 if (dir == "right") {fish.speedX = 2; }
+             }
+             //end of move
+             
+             function flipmove(dir){ //makes the fish turn left when left arrow is pressed
+                 fish.image.src = "flipmovefish.png"; 
+                 fish.image.height = 40 
+                 fish.image.width = 90
+                 if (dir == "left") {fish.speedX = -2; }
+             }
+             //end of flipmove
+             
+             function clearmove() { //makes the fish stop moving when still
+                 fish.image.src = "mainfish.png";
+                 fish.speedX = 0;
+                 fish.speedY = 0;
+             }
+             //end of clearmove
+             
+             function easy(){
+                 int = 350 //changes the frequency of sharks
+                 if (foodAmount == 5){ //this if statement changes the amount of food based on difficulty
+                 foodAmount = 7
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 }
+                 if (foodAmount == 3){
+                 foodAmount = 7
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 }
+             }
+             //end of easy
+             
+             function normal(){
+                 int = 200
+                 if (foodAmount == 3){
+                 foodAmount = 5
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image")) }
+                 
+                 if (foodAmount == 7){
+                 foodAmount = 5
+                 foods.pop()
+                 foods.pop()
+                 }
+                 
+             }
+             //end of normal
+             
+             function hard(){
+                 int = 100
+                 if (foodAmount == 5){
+                 foodAmount = 3
+                 foods.pop()
+                 foods.pop()}
+                 
+                 if (foodAmount == 7){
+                 foodAmount = 3
+                 foods.pop()
+                 foods.pop()
+                 foods.pop()
+                 foods.pop()}
+             }
+             //end of hard
+             
+             function extreme(){
+                 int = 30 
+             }
+             //end of extreme
+             
+        </script>
+         Game too easy?<br>Adjust your diffucilty <i>here!</i><br> 
+        <button onclick = easy() >Easy</button>&ensp;
+        <button onclick = normal()>Normal(default)</button>&ensp;
+        <button onclick = hard()>Hard</button>&ensp;
+        <button onclick = extreme()>EXTREME</button>&ensp;
+        <p>You are a fish! To stay alive you must eat algee and smaller fish. Swim around using the arrow keys and try to collect as much food as possible without being eaten by the sharks!<br> But watch out! Sharks are vicious and can attack from all angles, so it's best not to touch them at all! <br> Stay safe and good luck!
+    </body>
+</html>
