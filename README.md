@@ -1,6 +1,6 @@
 # Eat-or-be-eaten
 (JS 11 Final Project)
-A little fish game created using Javascript and HTML
+A little fish game created using Javascript/HTML
 
 Honestly I don't remember how this code works, I made it like 3 years ago
 
