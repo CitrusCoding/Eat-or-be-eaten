@@ -17,4 +17,6 @@ the higher the difficulty, the more sharks spawn - easy mode adds more food as w
 
 all art done by me :^)
 made following this tutorial: https://www.w3schools.com/graphics/game_intro.asp
+
+
 also an organizational note: all the images should probably be put in one folder, but I am too lazy to edit it now, so sorry.
