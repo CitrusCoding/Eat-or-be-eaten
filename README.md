@@ -4,7 +4,7 @@ A little fish game created using Javascript/HTML
 
 Honestly I don't remember how this code works, I made it like 3 years ago
 
-You play as a little fish, use the arrow keys to swim around and eat food (green algee for one point, goldfish for 5)
+You play as a little fish, use the arrow keys to swim around and eat food (green algee for 1 point, goldfish for 5)
 avoid touching the sharks or they will eat you
 
 note: the hitbox on the sharks is too big - this is because the shark image is rectangular, the edges are just transparent.
@@ -17,3 +17,4 @@ the higher the difficulty, the more sharks spawn - easy mode adds more food as w
 
 all art done by me :^)
 made following this tutorial: https://www.w3schools.com/graphics/game_intro.asp
+also an organizational note: all the images should probably be put in one folder, but I am too lazy to edit it now, so sorry.
