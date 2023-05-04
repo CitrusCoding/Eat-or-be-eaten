@@ -59,12 +59,12 @@
              //FUNCTIONS
              
              function startGame(){
-                 fish = new component(90, 48, "mainfish.png", 350, 250, "image"); //the main piece
-                 smallFish = new component(40, 25, "smallfish.png", Math.floor(Math.random() * 700), (Math.floor(Math.random() * 400)), "image"); 
-                 background = new component(800, 500, "bluebg.png", 0, 0, "image") //background format 
+                 fish = new component(90, 48, "images/mainfish.png", 350, 250, "image"); //the main piece
+                 smallFish = new component(40, 25, "images/smallfish.png", Math.floor(Math.random() * 700), (Math.floor(Math.random() * 400)), "image"); 
+                 background = new component(800, 500, "images/bluebg.png", 0, 0, "image") //background format 
                  score = new component("15px", "Consolas", "black", 700, 40, "text") //score format
-                 respawn = new component(60, 20, "button.png", 700, 50, "image"); 
-                 for (var j = 0; j < foodAmount; j++){foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))} //creates multiple food pieces
+                 respawn = new component(60, 20, "images/button.png", 700, 50, "image"); 
+                 for (var j = 0; j < foodAmount; j++){foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))} //creates multiple food pieces
                  gameArea.start();
              }
              //end of startGame
@@ -179,11 +179,11 @@
                  function newColour(){ //randomizes colour of sharks
                      var choose = Math.floor(Math.random() * 4)
                      var image = "";
-                     if (choose == 0){image = "flipenemyRED.png"}
-                     else if (choose == 1){image = "flipenemyGREEN.png"}
-                     else if (choose == 2){image = "flipenemyYELLOW.png"}
-                     else if (choose == 3 || choose == 4){image = "flipenemyPURPLE.png"}
-                     else {image = "temporary-fish.png"} //test, should not be possible
+                     if (choose == 0){image = "images/flipenemyRED.png"}
+                     else if (choose == 1){image = "images/flipenemyGREEN.png"}
+                     else if (choose == 2){image = "images/flipenemyYELLOW.png"}
+                     else if (choose == 3 || choose == 4){image = "images/flipenemyPURPLE.png"}
+                     else {image = "images/temporary-fish.png"} //test, should not be possible
                      
                      return image; 
                  }
@@ -192,11 +192,11 @@
                  function newColourR(){
                      var choose = Math.floor(Math.random() * 4)
                      var image = "";
-                     if (choose == 0){image = "enemyRED.png"}
-                     else if (choose == 1){image = "enemyGREEN.png"}
-                     else if (choose == 2){image = "enemyYELLOW.png"}
-                     else if (choose == 3 || choose == 4){image = "enemyPURPLE.png"}
-                     else {image = "temporary-fish.png"} //test, should not be possible 
+                     if (choose == 0){image = "images/enemyRED.png"}
+                     else if (choose == 1){image = "images/enemyGREEN.png"}
+                     else if (choose == 2){image = "images/enemyYELLOW.png"}
+                     else if (choose == 3 || choose == 4){image = "images/enemyPURPLE.png"}
+                     else {image = "images/temporary-fish.png"} //test, should not be possible 
                      return image; 
                  }
                  //end of newColourR
@@ -250,7 +250,7 @@
              //end of update
              
              function move(dir){ //makes the fish open it's mouth when moving 
-                 fish.image.src = "movefish.png"; 
+                 fish.image.src = "images/movefish.png"; 
                  fish.image.height = 40 
                  fish.image.width = 90
                  //if (dir == "up") {fish.speedY = -2;}  
@@ -260,7 +260,7 @@
              //end of move
              
              function flipmove(dir){ //makes the fish turn left when left arrow is pressed
-                 fish.image.src = "flipmovefish.png"; 
+                 fish.image.src = "images/flipmovefish.png"; 
                  fish.image.height = 40 
                  fish.image.width = 90
                  if (dir == "left") {fish.speedX = -2; }
@@ -268,7 +268,7 @@
              //end of flipmove
              
              function clearmove() { //makes the fish stop moving when still
-                 fish.image.src = "mainfish.png";
+                 fish.image.src = "images/mainfish.png";
                  fish.speedX = 0;
                  fish.speedY = 0;
              }
@@ -278,13 +278,13 @@
                  int = 350 //changes the frequency of sharks
                  if (foodAmount == 5){ //this if statement changes the amount of food based on difficulty
                  foodAmount = 7
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
                  }
                  if (foodAmount == 3){
                  foodAmount = 7
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "iamges/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
                  }
              }
              //end of easy
@@ -293,8 +293,8 @@
                  int = 200
                  if (foodAmount == 3){
                  foodAmount = 5
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
-                 foods.push(new component(20, 20, "foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image")) }
+                 foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image"))
+                 foods.push(new component(20, 20, "images/foodalgee.png", (Math.floor(Math.random() * 700)), (Math.floor(Math.random() * 400)), "image")) }
                  
                  if (foodAmount == 7){
                  foodAmount = 5
